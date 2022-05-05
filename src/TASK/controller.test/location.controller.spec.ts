@@ -21,17 +21,12 @@ describe('LocationController', () => {
     getLocations: jest.fn().mockResolvedValue([locationStub]),
     createLocation: jest.fn().mockResolvedValue(locationStub),
   };
-  const mockCharacterservice = {};
-
+  
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [LocationController],
       providers: [
-        LocationService,
-        {
-          provide: CharacterService,
-          useValue: mockCharacterservice,
-        },
+        LocationService
       ],
     })
       .overrideProvider(LocationService)

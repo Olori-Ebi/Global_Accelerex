@@ -1,20 +1,19 @@
-import { Body, Controller, Get, InternalServerErrorException, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { RepositoryException } from '../../commons/custom-exception/repository.exception';
 import LocationDto from '../dtos/location.dto';
 import Location from '../entities/location.entity';
-import CharacterService from '../services/character.service';
 import LocationService from '../services/location.service';
 
 @ApiTags('Location')
 @Controller()
 export default class LocationController {
   constructor(
-    private readonly characterService: CharacterService,
     private readonly locationService: LocationService,
   ) {}
 
@@ -26,7 +25,7 @@ export default class LocationController {
       const { name, longitude, latitude } = body;
       return await this.locationService.createLocation(name, longitude, latitude);
     } catch (error) {
-      throw new InternalServerErrorException(`Error creating a location: ${error.message}`);
+      throw new RepositoryException(`Error creating a location: ${error.message}`);
     }
   }
 
@@ -37,7 +36,7 @@ export default class LocationController {
     try {
       return await this.locationService.getLocations();
     } catch (error) {
-      throw new InternalServerErrorException(`Error getting locations: ${error.message}`);
+      throw new RepositoryException(`Error fetching locations: ${error.message}`);
     }
   }
 }

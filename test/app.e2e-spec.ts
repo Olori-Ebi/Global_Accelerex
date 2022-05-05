@@ -26,7 +26,7 @@ describe('AppController (e2e)', () => {
         load: [configuration],
       }),TaskModule,TypeOrmModule.forRoot({
         type: 'mysql',
-        port: 3307,
+        port: 3306,
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: 'testdb',
@@ -140,7 +140,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('POST /:characterId/episode/:episodeId/comment', () => {
+  describe('POST /episode/:episodeId/comment', () => {
     describe('when calling the endpoint', () => {
       const comment: CommentDto = {
         "comment": "My firsset comment"
@@ -148,7 +148,7 @@ describe('AppController (e2e)', () => {
       it('should make a request to make a comment on an episode (POST)', async () => {
         
         const result = await request(app.getHttpServer())
-          .post(`/${characterId}/episode/${episodeId}/comment`)
+          .post(`/episode/${episodeId}/comment`)
           .send(comment)
           .expect(201)
           expect(result.body).toHaveProperty('id');
@@ -156,15 +156,14 @@ describe('AppController (e2e)', () => {
       });
     });
   });
-
   
-  describe('GET /:characterId/episode/:episodeId/comments', () => {
+  describe('GET /episode/:episodeId/comments', () => {
     describe('when calling the endpoint', () => {
       it('should make a request to get comments on an episode (GET)', async () => {
         const result = await request(app.getHttpServer())
-          .get(`/${characterId}/episode/${episodeId}/comments`)
+          .get(`/episode/${episodeId}/comments`)
           .expect(200)
-          expect(result.body).toHaveProperty('id');
+          expect(result.body.length).toBeGreaterThanOrEqual(0)
       });
     });
   });

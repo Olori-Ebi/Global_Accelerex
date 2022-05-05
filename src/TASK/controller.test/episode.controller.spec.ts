@@ -7,7 +7,7 @@ import EpisodeController from '../controllers/episode.controller';
 import { Gender, Status } from '../enum/index.enum';
 
 describe('EpisodeController', () => {
-  let controller: EpisodeController;
+  let episodeController: EpisodeController;
   let episodeService: EpisodeService;
 
   const episodeStub = {
@@ -59,12 +59,12 @@ const characterStub = {
       .useValue(mockEpisodeService)
       .compile();
 
-    controller = module.get<EpisodeController>(EpisodeController);
+    episodeController = module.get<EpisodeController>(EpisodeController);
     episodeService = module.get<EpisodeService>(EpisodeService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(episodeController).toBeDefined();
   });
 
   describe('getEpisodes', () => {
@@ -72,7 +72,7 @@ const characterStub = {
       let episodes: Episode[];
 
       beforeEach(async () => {
-        episodes = await controller.getEpisodes();
+        episodes = await episodeController.getEpisodes();
       });
 
       test('then it should call episode Service', () => {
@@ -96,7 +96,7 @@ const characterStub = {
             releaseDate: new Date(),
         };
 
-        episode = await controller.createEpisode(1, episodeDto);
+        episode = await episodeController.createEpisode(1, episodeDto);
       });
 
       test('then it should call episode Service', () => {

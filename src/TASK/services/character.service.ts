@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+// import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import CharacterDto from '../dtos/character.dto';
@@ -58,14 +58,8 @@ export default class CharacterService {
   }
 
   async getCharacter(id: number): Promise<Character> {
-    const character = await this.characterModel.findOne({
+    return await this.characterModel.findOne({
       where: { id },
     });
-
-    if (!character) {
-      throw new NotFoundException(`Character with ID "${id}" not found`);
-    }
-
-    return character;
   }
 }

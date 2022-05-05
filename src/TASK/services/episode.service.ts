@@ -1,4 +1,3 @@
-import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Character from '../entities/character.entity';
@@ -44,12 +43,6 @@ export default class EpisodeService {
   }
 
   async getEpisode( episodeId: number): Promise<Episode> {
-    const episode = await this.episodeModel.findOne({ where: {id: episodeId}})
-
-    if (!episode) {
-      throw new NotFoundException(`Episode with ID: ${episodeId} not found`);
-    }
-
-    return episode;
+    return await this.episodeModel.findOne({ where: {id: episodeId}})
   }
 }

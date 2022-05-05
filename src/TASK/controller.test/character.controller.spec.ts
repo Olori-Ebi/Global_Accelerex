@@ -7,7 +7,7 @@ import LocationService from '../services/location.service';
 import CharacterController from '../controllers/character.controller';
 
 describe('CharacterController', () => {
-  let controller: CharacterController;
+  let characterController: CharacterController;
   let characterService: CharacterService;
 
   const characterStub = {
@@ -58,12 +58,12 @@ describe('CharacterController', () => {
       .useValue(mockCharacterService)
       .compile();
 
-    controller = module.get<CharacterController>(CharacterController);
+    characterController = module.get<CharacterController>(CharacterController);
     characterService = module.get<CharacterService>(CharacterService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(characterController).toBeDefined();
   });
 
   describe('getCharacter', () => {
@@ -71,7 +71,7 @@ describe('CharacterController', () => {
       let character: Character;
 
       beforeEach(async () => {
-        character = await controller.getCharacter(characterStub.id);
+        character = await characterController.getCharacter(characterStub.id);
       });
 
       test('then it should call Character Service', () => {
@@ -88,7 +88,7 @@ describe('CharacterController', () => {
       let characters: Character[];
 
       beforeEach(async () => {
-        characters = await controller.getCharacters({});
+        characters = await characterController.getCharacters({});
       });
 
       test('then it should call Character Service', () => {
@@ -113,7 +113,7 @@ describe('CharacterController', () => {
           gender: Gender.MALE,
         };
 
-        character = await controller.createCharacter(1, characterDto);
+        character = await characterController.createCharacter(1, characterDto);
       });
 
       test('then it should call Character Service', () => {

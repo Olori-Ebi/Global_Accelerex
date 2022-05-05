@@ -9,6 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { NotFoundException } from '../../commons/custom-exception/notFound.exception';
+import { RepositoryException } from '../../commons/custom-exception/repository.exception';
 import { ParseIntPipe } from '../../commons/pipes/parseInt.pipes';
 import CharacterDto from '../dtos/character.dto';
 import { FilterDto } from '../dtos/filter.dto';
@@ -39,7 +41,7 @@ export default class CharacterController {
     try {
       return await this.characterService.getCharacters(filterDto)
     } catch (error) {
-      throw new InternalServerErrorException(`Error getting characters: ${error.message}`);
+      throw new RepositoryException(`Error fetching characters: ${error.message}`);
     }
   }
 
@@ -52,6 +54,9 @@ export default class CharacterController {
   ): Promise<Character> {
     try {
       const location = await this.locationService.getLocation(locationId);
+      if(!location) {
+        throw new NotFoundException(`Location with ID "${locationId}" not found`);
+      }
       return await this.characterService.createCharacter(
         body,
         location,
@@ -60,7 +65,7 @@ export default class CharacterController {
       if(error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException('A character can only be at a location')
       } else {
-        throw new InternalServerErrorException(`Error creating a character: ${error.message}`);
+        throw new RepositoryException(`Error creating a character: ${error.message}`);
       }
     }
   }
@@ -69,10 +74,11 @@ export default class CharacterController {
   @ApiNotFoundResponse({ description: 'Not found'})
   @Get('/:characterId/character')
   async getCharacter(@Param('characterId', ParseIntPipe) characterId: number): Promise<Character> {
-    try {
-      return await this.characterService.getCharacter(characterId);
-    } catch (error) {
-      throw new InternalServerErrorException(`Error getting a character: ${error.message}`);
-    }
+      const character = await this.characterService.getCharacter(characterId);
+      if (!character) {
+        throw new NotFoundException(`Character with ID "${characterId}" not found`);
+      } else {
+        return character;
+      }
   }
 }
